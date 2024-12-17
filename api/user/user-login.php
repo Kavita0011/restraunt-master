@@ -1,3 +1,15 @@
+<?php  
+include("/xampp/htdocs/restraunt/includes/db.php");
+$user_id=0;
+$user_password="";
+$user_email=$_REQUEST['user_email'];
+$user_password=$_REQUEST['user_password'];
+if(in_array($user_email,$user_emails) &&in_array($user_password,$user_passwords)){
+    header("Location: http://localhost/restraunt/api/dashboard.php?user_id=$user_id");
+    exit();
+}else{
+echo"please enter correct credentials";
+}?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +37,6 @@
         <p class="signup-text">Don't have an account? <a href="user-sign-up.php">Sign up</a></p>
     </div>
     <p class="dashboard">Don't have an account? <a href="dashboard.php">dashboard</a></p>
-
     <!-- user-login form ends  -->
 </body>
 </html>

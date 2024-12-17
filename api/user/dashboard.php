@@ -3,20 +3,31 @@
 session_start();
 
 // Dummy user data (replace this with database connection)
+
+    // include('../../includes/header.php'); 
+    include('../../includes/db.php'); 
+
+// Fetch menu items
+$user_id=$_REQUEST['id'];
+$sql = "SELECT * FROM users WHERE user_id = $user_id";
+$result = $conn->query($sql);
+ while ($row = $result->fetch_assoc()) {
+    // echo $row['name'];
+
 $user = [
-    'name' => 'John Doe',
-    'email' => 'john.doe@example.com',
+    'name' => $row['name'],
+    'email' => $row['email'],
     'membership' => 'Gold Member',
     'profile_picture' => 'https://via.placeholder.com/100', // Example placeholder image
 ];
-
+}
 // Dummy recent orders (replace this with database connection)
 $recent_orders = [
     ['item' => 'Margherita Pizza', 'date' => '2024-06-10', 'status' => 'Delivered'],
     ['item' => 'Pasta Alfredo', 'date' => '2024-06-12', 'status' => 'Preparing'],
     ['item' => 'Caesar Salad', 'date' => '2024-06-15', 'status' => 'Delivered'],
 ];
-
+ 
 // Dummy reservations
 $reservations = [
     ['date' => '2024-06-20', 'time' => '7:00 PM', 'guests' => 4],
