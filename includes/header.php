@@ -36,9 +36,9 @@
                         <div class="dropdown">
                             <a href="#">Login &#9662;</a>
                             <div class="dropdown-content">
-                                <a href="../api/restraunt-login.php">Restaurant</a>
-                                <a href="../api/user-login.php">user</a>
-                              
+                                <a href="../api/restraunt/restraunt-login.php">Restaurant</a>
+                                <a href="../api/user/user-login.php">user</a>
+                                <a href="../api/Delivery-partner.php">Delivery-partner</a>
                             </div>
                         </div>
                     </li>
