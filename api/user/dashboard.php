@@ -53,7 +53,7 @@ $reservations = [
             <a href="#">📅 Reservations</a>
             <a href="#">👤 Profile</a>
             <a href="#">⚙️ Settings</a>
-            <a href="#">🚪 Logout</a>
+           <a href="logout.php?user_id=$user['user_id']" >🚪 Logout</a>
         </div>
 
         <!-- Main Content -->
