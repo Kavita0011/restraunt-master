@@ -8,8 +8,8 @@ session_start();
     include('../../includes/db.php'); 
 
 // Fetch menu items
-$user_id=$_REQUEST['id'];
-$sql = "SELECT * FROM users WHERE user_id = $user_id";
+$user_email=$_REQUEST['user_email'];
+$sql = "SELECT * FROM `users` WHERE `email`='$user_email'";
 $result = $conn->query($sql);
  while ($row = $result->fetch_assoc()) {
     // echo $row['name'];

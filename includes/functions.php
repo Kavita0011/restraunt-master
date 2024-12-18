@@ -6,24 +6,9 @@
  * The system includes Admin, Users, Restaurants, Delivery Partners, and a tracking system.
  */
 
-// Database Connection Function
-function connectDatabase() {
-    $host = 'localhost';
-    $dbname = 'restaurant-master';
-    $username = 'root';
-    $password = '';
-
-    $connection = mysqli_connect($host, $username, $password, $dbname);
-
-    if (!$connection) {
-        die("Database connection failed: " . mysqli_connect_error());
-    }
-    return $connection;
-}
-
 // Function to fetch records
-function fetchRecords($connection, $table, $conditions = []) {
-    $sql = "SELECT * FROM $table";
+function fetchRecords($connection, $table,$columns, $conditions = []) {
+    $sql = "SELECT $columns FROM $table";
 
     if (!empty($conditions)) {
         $whereClauses = [];
@@ -98,8 +83,6 @@ function trackOrder($connection, $orderId) {
     return !empty($orders) ? $orders[0] : null;
 }
 
-// Main Execution
-$connection = connectDatabase();
 
 // Example usage:
 // Place a new order

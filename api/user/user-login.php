@@ -1,21 +1,26 @@
 <?php  
-include("/xampp/htdocs/restraunt/includes/db.php");
-include("/xampp/htdocs/restraunt/includes/functions.php");
-$user_id=0;
-$user_password="";
-$user_email=$_REQUEST['user_email'];
-$user_password=$_REQUEST['user_password'];
-$table='users';
+    $user_email=$_REQUEST['email'];
+    $user_password=$_REQUEST['password'];
+if(isset($user_email) && isset($user_password)){
+    include("/xampp/htdocs/restraunt/includes/db.php");
+    include("/xampp/htdocs/restraunt/includes/functions.php");
+    // $user_id=0;
+    // $user_password="";
 
-$user=fetchRecords($conn, $table, $conditions = '');
-print_r($user);
-if(in_array($user['email'],$user_emails) &&in_array($user_password,$user_passwords)){
+    $table='users';
+    $columns='`email`,`password`' ; 
+     $user=fetchRecords($conn, $table, $columns);
+var_dump($user);
+// if(in_array($user['email'],$user_emails) &&in_array($user_,$user_passwords)){
     // $user_id=
-    header("Location: http://localhost/restraunt/api/dashboard.php?user_id=$user_id");
-    exit();
+    // header("Location: http://localhost/restraunt/api/user/dashboard.php?user_email=$user_email&user_password=$user_password");
+    // exit();
 }else{
 echo"please enter correct credentials";
-}?>
+}
+// }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +34,7 @@ echo"please enter correct credentials";
     <!-- user login-form starts here -->
     <div class="login-container">
         <h1>User Login</h1>
-        <form action="#" method="POST">
+        <form method="GET">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>

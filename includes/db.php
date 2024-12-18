@@ -1,16 +1,20 @@
 
 <?php
-// database connectivity
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "restaurant-master";
+// Database Connection Function
+function connectDatabase() {
+    $host = 'localhost';
+    $dbname = 'restaurant-master';
+    $username = 'root';
+    $password = '';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+    $connection = mysqli_connect($host, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    if (!$connection) {
+        die("Database connection failed: " . mysqli_connect_error());
+    }
+    return $connection;
 }
+
+// Main Execution
+$conn = connectDatabase();
 ?>
