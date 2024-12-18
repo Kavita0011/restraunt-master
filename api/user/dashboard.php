@@ -4,30 +4,61 @@ session_start();
 
 // Dummy user data (replace this with database connection)
 
-    // include('../../includes/header.php'); 
-    include('../../includes/db.php'); 
+// include('../../includes/header.php'); 
+// Include the database connection file and functions file
+include("/xampp/htdocs/restraunt/includes/db.php");
+include("/xampp/htdocs/restraunt/includes/functions.php");
+
+
+// Check if the 'email' and 'password' fields are set in the request
+if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
+    // Store the provided email and password in variables
+    $user_email = $_REQUEST['email'];
+    $user_password = $_REQUEST['password'];
+
+
+    // Specify the table and columns to fetch data from
+    $table = 'users';
+    $columns = '*';
+    // $conditions=['user_email'=>$user_email];
+    // Fetch all user records from the database using a custom function
+    $user_details = fetchRecords($conn, $table, $columns);
+    $user="hello";
+    // Loop through each user record to validate credentials
+    // foreach ($users as $user) {
+    //     // Check if the provided email and password match a record
+    //     if ($user['email'] === $user_email && ($user['password'] === $user_password)) {
+    //         // Redirect the user to the dashboard if credentials are correct
+    //         header("Location: http://localhost/restraunt/api/user/dashboard.php?user_email=$user_email&user_password=$user_password");
+    //         exit(); // Stop further script execution after redirection
+    //         break; // Break out of the loop
+    //     } else {
+    //         // Set an error message if credentials do not match
+    //         $error_message = "Please enter correct credentials";
+    //     }
+    // }
+}
+
 
 // Fetch menu items
-$user_email=$_REQUEST['user_email'];
-$sql = "SELECT * FROM `users` WHERE `email`='$user_email'";
-$result = $conn->query($sql);
- while ($row = $result->fetch_assoc()) {
-    // echo $row['name'];
-
-$user = [
-    'name' => $row['name'],
-    'email' => $row['email'],
-    'membership' => 'Gold Member',
-    'profile_picture' => 'https://via.placeholder.com/100', // Example placeholder image
-];
-}
+// $user_email = $_REQUEST['user_email'];
+// $sql = "SELECT * FROM `users` WHERE `email`='$user_email'";
+// $result = $conn->query($sql);
+//  while ($row = $result->fetch_assoc()) {
+// $user = [
+//     'name' => $row['name'],
+//     'email' => $row['email'],
+//     'membership' => 'Gold Member',
+//     'profile_picture' => 'https://via.placeholder.com/100', // Example placeholder image
+// ];
+//  }
 // Dummy recent orders (replace this with database connection)
 $recent_orders = [
     ['item' => 'Margherita Pizza', 'date' => '2024-06-10', 'status' => 'Delivered'],
     ['item' => 'Pasta Alfredo', 'date' => '2024-06-12', 'status' => 'Preparing'],
     ['item' => 'Caesar Salad', 'date' => '2024-06-15', 'status' => 'Delivered'],
 ];
- 
+
 // Dummy reservations
 $reservations = [
     ['date' => '2024-06-20', 'time' => '7:00 PM', 'guests' => 4],
@@ -37,12 +68,14 @@ $reservations = [
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant User Dashboard</title>
-   <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Sidebar -->
@@ -53,7 +86,8 @@ $reservations = [
             <a href="#">📅 Reservations</a>
             <a href="#">👤 Profile</a>
             <a href="#">⚙️ Settings</a>
-           <a href="logout.php?user_id=$user['user_id']" >🚪 Logout</a>
+            <a href="logout.php?user_id=$user[user_id]">🚪 Logout</a>
+
         </div>
 
         <!-- Main Content -->
@@ -99,6 +133,8 @@ $reservations = [
                 <?php endforeach; ?>
             </div>
         </div>
+        <div class="data"><?php  var_dump($user); ?></div>
     </div>
 </body>
+
 </html>

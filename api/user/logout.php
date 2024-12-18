@@ -4,7 +4,7 @@ if (isset($user_id)) {
     include("/xampp/htdocs/restraunt/includes/functions.php");
 
     $table = 'users';
-    $columns = '`user_id`';
+    $columns = 'user_id';
     $users = fetchRecords($conn, $table, $columns);
 
     foreach ($users as $user) {
@@ -16,7 +16,7 @@ session_unset();
 session_destroy();
 
 // Redirect to login page or home page
-header("Location: user-login.php"); // Replace with your login page URL
+header("Location:  http://localhost/restraunt/api/user/user-login.php"); // Replace with your login page URL
 exit();
 
             break;
