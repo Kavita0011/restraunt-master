@@ -1,10 +1,16 @@
 <?php  
 include("/xampp/htdocs/restraunt/includes/db.php");
+include("/xampp/htdocs/restraunt/includes/functions.php");
 $user_id=0;
 $user_password="";
 $user_email=$_REQUEST['user_email'];
 $user_password=$_REQUEST['user_password'];
-if(in_array($user_email,$user_emails) &&in_array($user_password,$user_passwords)){
+$table='users';
+
+$user=fetchRecords($conn, $table, $conditions = '');
+print_r($user);
+if(in_array($user['email'],$user_emails) &&in_array($user_password,$user_passwords)){
+    // $user_id=
     header("Location: http://localhost/restraunt/api/dashboard.php?user_id=$user_id");
     exit();
 }else{
