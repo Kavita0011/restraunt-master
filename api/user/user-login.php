@@ -1,35 +1,29 @@
 <?php
-// Check if the 'email' and 'password' fields are set in the request
+$error_message='';
 if (isset($_REQUEST['email']) && isset($_REQUEST['password'])) {
-    // Store the provided email and password in variables
     $user_email = $_REQUEST['email'];
-    $user_password = $_REQUEST['password'];
-
-    // Include the database connection file and functions file
+$user_password = $_REQUEST['password'];
     include("/xampp/htdocs/restraunt/includes/db.php");
     include("/xampp/htdocs/restraunt/includes/functions.php");
 
-    // Specify the table and columns to fetch data from
     $table = 'users';
     $columns = '`email`,`password`';
-
-    // Fetch all user records from the database using a custom function
     $users = fetchRecords($conn, $table, $columns);
 
-    // Loop through each user record to validate credentials
     foreach ($users as $user) {
-        // Check if the provided email and password match a record
         if ($user['email'] === $user_email && ($user['password'] === $user_password)) {
-            // Redirect the user to the dashboard if credentials are correct
-            header("Location: http://localhost/restraunt/api/user/dashboard.php?user_email=$user_email&user_password=$user_password");
-            exit(); // Stop further script execution after redirection
-            break; // Break out of the loop
+            session_start();
+            $_SESSION["user_email"] = $user_email;
+            // echo $_SESSION["user_email"];
+            header("Location: http://localhost/restraunt/api/user/dashboard.php?user_email=$user_email");
+            // exit();
+            break;
         } else {
-            // Set an error message if credentials do not match
-            $error_message = "Please enter correct credentials";
+           $error_message= "please enter correct credentials";
         }
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
