@@ -13,10 +13,9 @@ include("/xampp/htdocs/restraunt/includes/functions.php"); // FetchRecords and o
 
 // Fetch the logged-in user's email from the session
 $user_email = $_SESSION['user_email'];
-
 // Define the database table and columns to fetch user data
 $table = 'users';
-$columns = ['id', 'name', 'email', 'profile_picture', 'membership']; // Only fetch necessary columns
+$columns = "*"; // Only fetch necessary columns
 $conditions = ['email' => $user_email]; // Filter by email to get the logged-in user's data
 
 // Use fetchRecords function to retrieve user details
@@ -27,7 +26,7 @@ $error_message = ''; // To store any error messages
 $user = null; // Will hold the user's details if found
 $recent_orders = []; // Mock data for recent orders
 $reservations = []; // Mock data for reservations
-
+// var_dump($user_details);
 // Check if user details were retrieved successfully
 if (!empty($user_details)) {
     $user = $user_details[0]; // Fetch the first record since email is unique
