@@ -5,14 +5,14 @@ include("/xampp/htdocs/restraunt/includes/functions.php"); // Update with the ac
 
 // Handle the form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
+    $user_email = $_POST['email'];
     $password = $_POST['password'];
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
     // Prepare data for insertion
     $userData = [
-        'email' => $email,
+        'email' => $user_email,
         'password' => password_hash($password, PASSWORD_BCRYPT), // Securely hash the password
         'name' => $name,
         'phone' => $phone,
@@ -23,7 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $isInserted = insertRecord($conn, 'users', $userData);
 
     if ($isInserted) {
-        echo "Registration successful! <a href='user-login.php'>Login here</a>";
+        session_start();
+        $_SESSION["user_email"] = $user_email;
+        // echo $_SESSION["user_email"];
+        header("Location: http://localhost/restraunt/api/user/dashboard.php?user_email=$user_email");
+        exit();
     } else {
         echo "Failed to register. Please try again.";
     }

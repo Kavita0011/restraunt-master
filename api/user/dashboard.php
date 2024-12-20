@@ -4,7 +4,7 @@ session_start();
 
 // Check if the user is logged in by verifying the session
 if (empty($_SESSION["user_email"])) {
-    die("You are not logged in. Please <a href='login.php'>log in</a>.");
+    die("<div class='container'>You are not logged in. Please <a href='user-login.php'>log in</a>.</div>");
 } 
 
 // Include the database connection and helper functions

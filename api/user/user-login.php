@@ -9,9 +9,9 @@ $user_password = $_REQUEST['password'];
     $table = 'users';
     $columns = '`email`,`password`';
     $users = fetchRecords($conn, $table, $columns);
-
+    $hashedPassword = password_hash($user_password, PASSWORD_BCRYPT);
     foreach ($users as $user) {
-        if ($user['email'] === $user_email && ($user['password'] === $user_password)) {
+        if ($user['email'] === $user_email && password_verify($user_password, $hashedPassword)) {
             session_start();
             $_SESSION["user_email"] = $user_email;
             // echo $_SESSION["user_email"];
