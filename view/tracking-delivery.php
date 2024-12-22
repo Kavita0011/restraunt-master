@@ -1,7 +1,9 @@
 <?php
-include 'db.php';
+include '\xampp\htdocs\restraunt\includes\db.php';
+include '\xampp\htdocs\restraunt\includes\functions.php';
 $deliveryId = $_GET['delivery_id'];
-$deliveryDetails = fetchRecords($conn, 'deliveries', ['id' => $deliveryId]);
+$deliveryDetails = fetchRecords($conn, 'delivery_partners',"*", ['delivery_partner_id'=> $deliveryId]);
+// var_dump($deliveryDetails);
 ?>
 
 <!DOCTYPE html>

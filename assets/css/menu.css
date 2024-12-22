@@ -1,0 +1,25 @@
+.menu-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    width: 300px;
+    text-align: center;
+    padding: 15px;
+    background-color: #fff;
+}
+.menu-card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+.menu-card h3 {
+    margin: 10px 0;
+}
+.menu-card p {
+    margin: 5px 0;
+    color: #666;
+}
+.menu-card .price {
+    color: #28a745;
+    font-weight: bold;
+}
