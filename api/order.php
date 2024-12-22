@@ -1,10 +1,10 @@
 <?php
 include('../includes/db.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $user_id = $_POST['user_id'];
-    $menu_id = $_POST['menu_id'];
-    $quantity = $_POST['quantity'];
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // $user_id = $_POST['user_id'];
+    $menu_id = $_REQUEST['item'];
+    // $quantity = $_POST['quantity'];
 
     // Fetch price from menu
     $sql = "SELECT price FROM Menu WHERE menu_id = $menu_id";
@@ -20,5 +20,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "Error: " . $conn->error;
     }
-}
+// }
 ?>
