@@ -7,12 +7,15 @@ session_start();
 if (empty($_SESSION["user_email"])) {
     die("<div class='container'>You are not logged in. Please <a href='../api/user/user-login.php'>log in</a>.</div>");
 } 
+else{
+    
+}
 // if()
 // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $user_id = $_POST['user_id'];
-    $menu_id = $_REQUEST['item'];
-    $quantity = $_POST['quantity'];
-
+    $user_id = $_SESSION['user_id'];
+    $menu_id = $_REQUEST['menu_id'];
+    $quantity = $_REQUEST['quantity'];
+echo "$quantity";
     // Fetch price from menu
     $sql = "SELECT price FROM Menu WHERE menu_id = $menu_id";
     $result = $conn->query($sql);

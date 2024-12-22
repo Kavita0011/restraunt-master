@@ -46,7 +46,7 @@ body {
 }
 
 /* Login button styling */
-button,.login-button {
+.btn,.login-button {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -59,7 +59,7 @@ button,.login-button {
     transition: background-color 0.3s ease;
 }
 
-button, .login-button:hover {
+.btn, .login-button:hover {
     color: #ff4757;
     background-color: white;
     border:1px solid #ff4757;
