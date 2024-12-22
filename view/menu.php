@@ -29,7 +29,7 @@ if (count($result) > 0) {
         echo '<h3>' . $item['item_name'] . '</h3>';
         echo '<p>' . $item['description'] . '</p>';
         echo '<p class="price">$' . number_format($item['price'], 2) . '</p>';
-        echo '</div></div>';
+        echo '<button type="submit"><a href="../api/order.php">buy now</a></button></div></div>';
     }
 } else {
     echo "<p>No menu items found.</p>";

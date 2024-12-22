@@ -30,7 +30,7 @@
                         <a href="../api/order.php">Order</a>
                     </li>
                     <li>
-                        <a href="../api/menu.php">Menu</a>
+                        <a href="menu.php">Menu</a>
                     </li>
                     <li>
                         <div class="dropdown">

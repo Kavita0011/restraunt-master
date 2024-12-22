@@ -67,10 +67,12 @@ if ($user) {
         <!-- Sidebar Section -->
         <div class="sidebar">
             <h2>Restaurant App</h2>
-            <a href="#">🏠 Dashboard</a>
+            <a href="dashboard.php">🏠 Dashboard</a>
+            <a href="menu.php">Menu</a>
+            <a href="orders.php">Orders</a>
             <a href="../../view/tracking-delivery.php">Track your order</a>
             <a href="#">📅 Reservations</a>
-            <a href="#">👤 Profile</a>
+            <a href="user-profile.php">👤 Profile</a>
             <a href="#">⚙️ Settings</a>
             <a href="logout.php">🚪 Logout</a>
         </div>
