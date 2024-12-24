@@ -2,6 +2,7 @@
 // menu.php
 include '../includes/db.php';
 include '../includes/functions.php';
+
 // Fetch records as an associative array
 $result = fetchRecords($conn, 'menu', '*');
 mysqli_close($conn);
@@ -13,54 +14,64 @@ mysqli_close($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Menu</title>
-    <link rel="stylesheet" href="../assets/css/menu.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/menu.css">
     <script>
-        // JavaScript to handle the increment and decrement of quantity
-        function updateQuantity(increment) {
-            let quantity = parseInt(document.getElementById("quantity").innerText);
-            if (increment) {
-                quantity++;
-            } else {
-                if (quantity > 1) {
-                    quantity--;
-                }
+        // JavaScript to handle quantity changes
+        function updateQuantity(id, change) {
+            const quantityInput = document.getElementById('quantity_' + id);
+            let currentValue = parseInt(quantityInput.value);
+            currentValue += change;
+
+            if (currentValue < 1) {
+                currentValue = 1; // Prevent negative or zero quantity
             }
-            document.getElementById("quantity").innerText = quantity;
+
+            quantityInput.value = currentValue;
         }
     </script>
 </head>
 <body>
+<div class="menu-container">
+    <?php
+    include "../includes/header.php";
 
-<?php
-include "../includes/header.php";
-// Check if there are any menu items and display them
-if (count($result) > 0) {
-    foreach ($result as $item) {
-        echo '<div class="container"><div class="menu-card">';
-        echo '<img src="' . $item['image_url'] . '" alt="' . $item['item_name'] . '">';
-        echo '<h3>' . $item['item_name'] . '</h3>';
-        echo '<p>' . $item['description'] . '</p>';
-        echo '<p class="price">$' . number_format($item['price'], 2) . '</p>';
-        ?>
-        <form action="../api/order.php" method="POST">
-            <div class="quantity-container">
-                <button type="button" class="btn" onclick="updateQuantity(false)"> - </button>
-                <span id="quantity" class="quantity"><?php echo 1; ?></span>
-                <button type="button" class="btn" onclick="updateQuantity(true)"> + </button>
+    // Check if there are any menu items and display them
+    if (count($result) > 0) {
+        foreach ($result as $item) { ?>
+            <div class="container">
+                <div class="menu-card">
+                    <img src="<?= htmlspecialchars($item['image_url']) ?>" 
+                         alt="<?= htmlspecialchars($item['item_name']) ?>" />
+                    <h3><?= htmlspecialchars($item['item_name']) ?></h3>
+                    <p><?= htmlspecialchars($item['description']) ?></p>
+                    <p class="price">$<?= number_format($item['price'], 2) ?></p>
+
+                    <!-- Quantity Controls -->
+                    <div class="quantity-controls">
+                        <button type="button" onclick="updateQuantity(<?= $item['menu_id'] ?>, -1)">-</button>
+                        <input type="number" id="quantity_<?= $item['menu_id'] ?>" name="count" value="1" readonly>
+                        <button type="button" onclick="updateQuantity(<?= $item['menu_id'] ?>, 1)">+</button>
+                    </div>
+
+                    <!-- Order Form -->
+                    <form action="../api/order.php" method="POST">
+                        <input type="hidden" name="menu_id" value="<?= htmlspecialchars($item['menu_id']) ?>" />
+                        <input type="hidden" name="quantity" id="hiddenQuantity_<?= $item['menu_id'] ?>" value="1" />
+                        <input type="hidden" name="user_id" value="<?=  $_SESSION['user_id']; ?>" />
+                        <button class="btn" type="submit" 
+                                onclick="document.getElementById('hiddenQuantity_<?= $item['menu_id'] ?>').value = document.getElementById('quantity_<?= $item['menu_id'] ?>').value;">
+                            Order Now
+                        </button>
+                    </form>
+                </div>
             </div>
-            <input type="hidden" name="menu_id" value="<?php echo $item['menu_id']; ?>" />
-            <input type="hidden" name="quantity" id="hiddenQuantity" value="1" />
-            <button class="btn" type="submit" onclick="document.getElementById('hiddenQuantity').value = document.getElementById('quantity').innerText;">Buy Now</button>
-        </form>
-        </div></div>
-        <?php
+        <?php }
+    } else {
+        echo "<p>No menu items found.</p>";
     }
-} else {
-    echo "<p>No menu items found.</p>";
-}
-include "../includes/footer.php";
-?>
-
+    include "../includes/footer.php";
+    ?>
+</div>
 </body>
 </html>
