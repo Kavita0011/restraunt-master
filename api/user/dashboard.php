@@ -5,7 +5,7 @@ session_start();
 // Check if the user is logged in by verifying the session
 if (empty($_SESSION["user_email"])) {
     die("<div class='container'>You are not logged in. Please <a href='user-login.php'>log in</a>.</div>");
-} 
+}
 
 // Include the database connection and helper functions
 include("/xampp/htdocs/restraunt/includes/db.php"); // Database connection
@@ -13,20 +13,22 @@ include("/xampp/htdocs/restraunt/includes/functions.php"); // FetchRecords and o
 
 // Fetch the logged-in user's email from the session
 $user_email = $_SESSION['user_email'];
-// Define the database table and columns to fetch user data
-$table = 'users';
-$columns = "*"; // Only fetch necessary columns
-$conditions = ['email' => $user_email]; // Filter by email to get the logged-in user's data
 
-// Use fetchRecords function to retrieve user details
-$user_details = fetchRecords($conn, $table, $columns, $conditions);
+// Fetch user details securely using prepared statements
+$query = "SELECT * FROM users WHERE email = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $user_email);
+$stmt->execute();
+$result = $stmt->get_result();
+$user_details = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
 // Initialize variables for dashboard data
 $error_message = ''; // To store any error messages
 $user = null; // Will hold the user's details if found
 $recent_orders = []; // Mock data for recent orders
 $reservations = []; // Mock data for reservations
-// var_dump($user_details);
+
 // Check if user details were retrieved successfully
 if (!empty($user_details)) {
     $user = $user_details[0]; // Fetch the first record since email is unique
@@ -69,7 +71,7 @@ if ($user) {
             <h2>Restaurant App</h2>
             <a href="#">🏠 Dashboard</a>
             <a href="../../view/menu.php">Menu</a>
-            <a href="orders.php">Orders</a>
+            <a href="myorders.php"> MY Orders</a>
             <a href="../../view/tracking-delivery.php?delivery_id=1">Track your order</a>
             <a href="#">📅 Reservations</a>
             <a href="#">⚙️ Settings</a>

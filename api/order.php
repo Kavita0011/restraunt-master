@@ -1,11 +1,16 @@
 <?php
-include('../includes/db.php');
+
+// Start the session to maintain user login state
 session_start();
 
-// Check if the user is logged in
+// Check if the user is logged in by verifying the session
 if (empty($_SESSION["user_email"])) {
-    die("<div class='container'>You are not logged in. Please <a href='../api/user/user-login.php'>log in</a>.</div>");
+    die("<div class='container'>You are not logged in. Please <a href='user-login.php'>log in</a>.</div>");
 }
+
+// Include the database connection and helper functions
+include("/xampp/htdocs/restraunt/includes/db.php"); // Database connection
+include("/xampp/htdocs/restraunt/includes/functions.php"); // FetchRecords and other helper functions
 
 // Check if the form is submitted using POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['menu_id'], $_POST['quantity'])) {

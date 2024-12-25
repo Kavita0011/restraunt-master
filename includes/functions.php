@@ -6,58 +6,83 @@
  * The system includes Admin, Users, Restaurants, Delivery Partners, and a tracking system.
  */
 
-// Function to fetch records
-function fetchRecords($connection, $table,$columns, $conditions = []) {
+// Function to fetch records using prepared statements
+function fetchRecords($connection, $table, $columns = "*", $conditions = []) {
     $sql = "SELECT $columns FROM $table";
+    $params = [];
 
     if (!empty($conditions)) {
         $whereClauses = [];
         foreach ($conditions as $column => $value) {
-            $whereClauses[] = "$column = '" . mysqli_real_escape_string($connection, $value) . "'";
+            $whereClauses[] = "$column = ?";
+            $params[] = $value;
         }
         $sql .= " WHERE " . implode(" AND ", $whereClauses);
     }
 
-    $result = mysqli_query($connection, $sql);
-    $data = [];
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
+    $stmt = $connection->prepare($sql);
+    if ($params) {
+        $types = str_repeat("s", count($params));
+        $stmt->bind_param($types, ...$params);
     }
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
     return $data;
 }
 
-// Function to insert a record
+// Function to insert a record using prepared statements
 function insertRecord($connection, $table, $data) {
     $columns = implode(", ", array_keys($data));
-    $values = implode(", ", array_map(function($value) use ($connection) {
-        return "'" . mysqli_real_escape_string($connection, $value) . "'";
-    }, array_values($data)));
+    $placeholders = implode(", ", array_fill(0, count($data), "?"));
 
-    $sql = "INSERT INTO $table ($columns) VALUES ($values)";
-    return mysqli_query($connection, $sql);
+    $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+    $stmt = $connection->prepare($sql);
+
+    $types = str_repeat("s", count($data));
+    $values = array_values($data);
+    $stmt->bind_param($types, ...$values);
+
+    $success = $stmt->execute();
+    $stmt->close();
+
+    return $success;
 }
 
-// Function to update a record
+// Function to update a record using prepared statements
 function updateRecord($connection, $table, $data, $conditions) {
     $setClauses = [];
+    $params = [];
+
     foreach ($data as $column => $value) {
-        $setClauses[] = "$column = '" . mysqli_real_escape_string($connection, $value) . "'";
+        $setClauses[] = "$column = ?";
+        $params[] = $value;
     }
 
     $whereClauses = [];
     foreach ($conditions as $column => $value) {
-        $whereClauses[] = "$column = '" . mysqli_real_escape_string($connection, $value) . "'";
+        $whereClauses[] = "$column = ?";
+        $params[] = $value;
     }
 
     $sql = "UPDATE $table SET " . implode(", ", $setClauses) . " WHERE " . implode(" AND ", $whereClauses);
-    return mysqli_query($connection, $sql);
+    $stmt = $connection->prepare($sql);
+
+    $types = str_repeat("s", count($params));
+    $stmt->bind_param($types, ...$params);
+
+    $success = $stmt->execute();
+    $stmt->close();
+
+    return $success;
 }
 
 // Example: Fetching orders for a user
 function getUserOrders($connection, $userId) {
-    return fetchRecords($connection, 'orders', ['user_id' => $userId]);
+    return fetchRecords($connection, 'orders', '*', ['user_id' => $userId]);
 }
 
 // Example: Placing a new order
@@ -79,10 +104,9 @@ function updateOrderStatus($connection, $orderId, $status) {
 
 // Example: Tracking an order
 function trackOrder($connection, $orderId) {
-    $orders = fetchRecords($connection, 'orders', ['id' => $orderId]);
+    $orders = fetchRecords($connection, 'orders', '*', ['id' => $orderId]);
     return !empty($orders) ? $orders[0] : null;
 }
-
 
 // Example usage:
 // Place a new order
