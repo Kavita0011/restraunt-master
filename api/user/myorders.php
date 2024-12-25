@@ -1,16 +1,4 @@
 <?php
-// Start the session to maintain user login state
-session_start();
-
-// Check if the user is logged in by verifying the session
-if (empty($_SESSION["user_email"])) {
-    die("<div class='container'>You are not logged in. Please <a href='user-login.php'>log in</a>.</div>");
-}
-
-// Include the database connection and helper functions
-include("/xampp/htdocs/restraunt/includes/db.php"); // Database connection
-include("/xampp/htdocs/restraunt/includes/functions.php"); // FetchRecords and other helper functions
-
 
 // Fetch user's orders securely
 $user_id = $_SESSION['user_id'];
@@ -35,7 +23,6 @@ try {
     // Check if there are any orders
     if ($result->num_rows > 0) {
         echo "<div class='container'>
-                <h1>Your Orders</h1>
                 <table>
                     <thead>
                         <tr>

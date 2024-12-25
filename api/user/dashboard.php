@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Start the session to maintain user login state
 session_start();
 
@@ -13,15 +13,13 @@ include("/xampp/htdocs/restraunt/includes/functions.php"); // FetchRecords and o
 
 // Fetch the logged-in user's email from the session
 $user_email = $_SESSION['user_email'];
+// Define the database table and columns to fetch user data
+$table = 'users';
+$columns = "*"; // Only fetch necessary columns
+$conditions = ['email' => $user_email]; // Filter by email to get the logged-in user's data
 
-// Fetch user details securely using prepared statements
-$query = "SELECT * FROM users WHERE email = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $user_email);
-$stmt->execute();
-$result = $stmt->get_result();
-$user_details = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+// Use fetchRecords function to retrieve user details
+$user_details = fetchRecords($conn, $table, $columns, $conditions);
 
 // Initialize variables for dashboard data
 $error_message = ''; // To store any error messages
@@ -56,82 +54,127 @@ if ($user) {
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant User Dashboard</title>
-    <!-- Link to the CSS file for styling -->
-    <link rel="stylesheet" href="../../assets/css/dashboard.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Restaurant User Dashboard</title>
+        <!-- Link to the CSS file for styling -->
+        <link rel="stylesheet" href="../../assets/css/dashboard.css">
+        <style>
+            .tab-content {
+                display: none;
+            }
 
-<body>
-    <div class="container">
-        <!-- Sidebar Section -->
-        <div class="sidebar">
-            <h2>Restaurant App</h2>
-            <a href="#">🏠 Dashboard</a>
-            <a href="../../view/menu.php">Menu</a>
-            <a href="myorders.php"> MY Orders</a>
-            <a href="../../view/tracking-delivery.php?delivery_id=1">Track your order</a>
-            <a href="#">📅 Reservations</a>
-            <a href="#">⚙️ Settings</a>
-            <a href="logout.php">🚪 Logout</a>
-        </div>
+            .tab-content.active {
+                display: block;
+            }
 
-        <!-- Main Content Section -->
-        <div class="main-content">
-            <!-- Check if user details are available -->
-            <?php if ($user): ?>
-                <!-- Profile Header Section -->
-                <div class="profile-header">
-                    <!-- Display user's profile picture or a default image -->
-                    <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? 'https://via.placeholder.com/100'); ?>" alt="Profile Picture">
-                    <div>
-                        <!-- Display user's name, email, and membership type -->
-                        <h2><?php echo htmlspecialchars($user['name']); ?></h2>
-                        <p><?php echo htmlspecialchars($user['email']); ?></p>
-                        <p><strong><?php echo htmlspecialchars($user['membership'] ?? 'Regular Member'); ?></strong></p>
-                    </div>
+            .sidebar a {
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            function showTab(tabId) {
+const contents = document.querySelectorAll('.tab-content');
+contents.forEach(content => content.classList.remove('active'));
+
+document.getElementById(tabId).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+showTab('dashboard'); // Show the dashboard tab by default
+});
+        </script>
+    </head>
+
+    <body>
+        <div
+            class="container">
+            <!-- Sidebar Section -->
+            <div class="sidebar">
+                <h2>Restaurant App</h2>
+                <a onclick="showTab('dashboard')">🏠 Dashboard</a>
+                <a onclick="showTab('orders')">Orders</a>
+                <a onclick="showTab('reservations')">📅 Reservations</a>
+                <a onclick="showTab('Track-order')">Track your order</a>
+                <a onclick="showTab('settings')">⚙️ Settings</a>
+                <a onclick="showTab('Logout')">🚪 Logout</a>
+            </div>
+
+            <!-- Main Content Section -->
+            <div
+                class="main-content">
+                <!-- Dashboard Section -->
+                <div
+                    id="dashboard" class="tab-content">
+                    <?php if ($user): ?>
+                        <div class="profile-header">
+                            <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? 'https://via.placeholder.com/100'); ?>" alt="Profile Picture">
+                            <div>
+                                <h2><?php echo htmlspecialchars($user['name']); ?></h2>
+                                <p><?php echo htmlspecialchars($user['email']); ?></p>
+                                <p>
+                                    <strong><?php echo htmlspecialchars($user['membership'] ?? 'Regular Member'); ?></strong>
+                                </p>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <p><?php echo htmlspecialchars($error_message); ?></p>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Recent Orders Section -->
-                <div class="dashboard-section">
+                <!-- Orders Section -->
+                <div id="orders" class="tab-content">
                     <h3>🍽️ Recent Orders</h3>
-                    <table>
-                        <tr>
-                            <th>Item</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                        <!-- Loop through and display each recent order -->
-                        <?php foreach ($recent_orders as $order): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($order['item']); ?></td>
-                                <td><?php echo htmlspecialchars($order['date']); ?></td>
-                                <td><?php echo htmlspecialchars($order['status']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </table>
+                    <?php include 'myorders.php' ?>
                 </div>
 
                 <!-- Reservations Section -->
-                <div class="dashboard-section">
+                <div id="reservations" class="tab-content">
                     <h3>📅 Upcoming Reservations</h3>
-                    <!-- Loop through and display each reservation -->
-                    <?php foreach ($reservations as $res): ?>
-                        <div class="reservation-card">
-                            <p><strong>Date:</strong> <?php echo htmlspecialchars($res['date']); ?></p>
-                            <p><strong>Time:</strong> <?php echo htmlspecialchars($res['time']); ?></p>
-                            <p><strong>Guests:</strong> <?php echo htmlspecialchars($res['guests']); ?></p>
-                        </div>
-                    <?php endforeach; ?>
+                    <?php if (!empty($reservations)): ?>
+                        <?php foreach ($reservations as $res): ?>
+                            <div class="reservation-card">
+                                <p>
+                                    <strong>Date:</strong>
+                                    <?php echo htmlspecialchars($res['date']); ?>
+                                </p>
+                                <p>
+                                    <strong>Time:</strong>
+                                    <?php echo htmlspecialchars($res['time']); ?>
+                                </p>
+                                <p>
+                                    <strong>Guests:</strong>
+                                    <?php echo htmlspecialchars($res['guests']); ?>
+                                </p>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No upcoming reservations found.</p>
+                    <?php endif; ?>
                 </div>
-            <?php else: ?>
-                <!-- Display an error message if user details are not available -->
-                <p><?php echo htmlspecialchars($error_message); ?></p>
-            <?php endif; ?>
+
+                <!-- Settings Section -->
+                <div id="settings" class="tab-content">
+                    <h3>⚙️ Settings</h3>
+                    <p>Settings functionality coming soon!</p>
+                </div>
+                <!-- Track your order Section -->
+                <div id="Track-order" class="tab-content">
+                    <h3>Track your order</h3>
+                   
+                    <?php include '/xampp/htdocs/restraunt/view/tracking-delivery.php'; ?>
+                </div>
+                <!-- Logout Section -->
+                <div id="Logout" class="tab-content">
+                    <h3>Logging out</h3>
+                    <?php include 'logout.php' ?>
+                </div>
+               
+            </div>
+
         </div>
-    </div>
-</body>
+    </body>
 
 </html>
+
