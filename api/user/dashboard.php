@@ -157,7 +157,7 @@ showTab('dashboard'); // Show the dashboard tab by default
                 <!-- Settings Section -->
                 <div id="settings" class="tab-content">
                     <h3>⚙️ Settings</h3>
-                    <p>Settings functionality coming soon!</p>
+                        <?php include 'settings.php'; ?>
                 </div>
                 <!-- Track your order Section -->
                 <div id="Track-order" class="tab-content">
