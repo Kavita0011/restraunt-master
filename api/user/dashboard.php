@@ -162,7 +162,6 @@ showTab('dashboard'); // Show the dashboard tab by default
                 <!-- Track your order Section -->
                 <div id="Track-order" class="tab-content">
                     <h3>Track your order</h3>
-                   
                     <?php include '/xampp/htdocs/restraunt/view/tracking-delivery.php'; ?>
                 </div>
                 <!-- Logout Section -->
