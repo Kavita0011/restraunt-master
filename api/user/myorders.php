@@ -49,7 +49,7 @@ try {
                     <td>$" . number_format($row['total_price'], 2) . "</td>
                     <td>" . htmlspecialchars($row['delivery_address']) . "</td>
                     <td>" . htmlspecialchars(date('Y-m-d H:i', strtotime($row['created_at']))) . "</td>
-                    <td><a href=../order-tracking.php?order_id=" . number_format($row['order_id']) . ">Track your order</a></td>
+                    <td><a href=dashboard.php?order_id=" . number_format($row['order_id']) . ">Track your order</a></td>
                 </tr>";
         }
 
@@ -64,7 +64,6 @@ try {
     echo "<div class='container'><p>Error fetching orders: " . htmlspecialchars($e->getMessage()) . "</p></div>";
 } finally {
     $stmt->close();
-    $conn->close();
 }
 ?>
 

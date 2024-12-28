@@ -96,9 +96,9 @@ showTab('dashboard'); // Show the dashboard tab by default
                 <a onclick="showTab('dashboard')">🏠 Dashboard</a>
                 <a onclick="showTab('orders')">Orders</a>
                 <a onclick="showTab('reservations')">📅 Reservations</a>
-                <a onclick="showTab('Track-order')">Track your order</a>
                 <a onclick="showTab('settings')">⚙️ Settings</a>
-                <a onclick="showTab('Logout')">🚪 Logout</a>
+                <a onclick="showTab('track-order')">Track your order</a>
+                <a href="logout.php">🚪 Logout</a>
             </div>
 
             <!-- Main Content Section -->
@@ -157,21 +157,17 @@ showTab('dashboard'); // Show the dashboard tab by default
                 <!-- Settings Section -->
                 <div id="settings" class="tab-content">
                     <h3>⚙️ Settings</h3>
-                        <?php include 'settings.php'; ?>
+                        <?php //include 'settings.php'; ?>
                 </div>
                 <!-- Track your order Section -->
-                <div id="Track-order" class="tab-content">
+                <div id="track-order" class="tab-content">
                     <h3>Track your order</h3>
-                    <?php include '/xampp/htdocs/restraunt/view/tracking-delivery.php'; ?>
+                    <?php include 'order-tracking.php'; ?>
                 </div>
-                <!-- Logout Section -->
-                <div id="Logout" class="tab-content">
-                    <h3>Logging out</h3>
-                    <?php include 'logout.php' ?>
-                </div>
+                
                
             </div>
-
+        </div>
         </div>
     </body>
 
